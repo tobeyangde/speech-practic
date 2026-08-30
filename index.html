@@ -734,6 +734,37 @@
     utterance: null
   };
 
+  // ===== Fallback 高亮（移动端 onboundary 不支持时使用定时器估算逐词推进）=====
+  var fallbackTimer = null;
+  var boundaryFired = false;
+  var fallbackActive = false;
+
+  function clearFallback() {
+    if (fallbackTimer) {
+      clearInterval(fallbackTimer);
+      fallbackTimer = null;
+    }
+    fallbackActive = false;
+  }
+
+  function startFallback(chunkWordIndices, msPerWord) {
+    clearFallback();
+    fallbackActive = true;
+    var pos = 0;
+    while (pos < chunkWordIndices.length && chunkWordIndices[pos] <= state.currentWordIndex) {
+      pos++;
+    }
+    fallbackTimer = setInterval(function() {
+      if (!state.isPlaying || state.isPaused) return;
+      if (pos < chunkWordIndices.length) {
+        updateHighlight(chunkWordIndices[pos]);
+        pos++;
+      } else {
+        clearFallback();
+      }
+    }, msPerWord);
+  }
+
   // ===== DOM 引用 =====
   var $ = function(id) { return document.getElementById(id); };
   var input = $('speech-input');
@@ -1074,7 +1105,21 @@
     utterance.lang = 'en-US';
     utterance.pitch = 1;
 
+    // Fallback 高亮设置（移动端 onboundary 不支持时使用）
+    clearFallback();
+    boundaryFired = false;
+    var chunkWordIndices = [];
+    for (var wi = 0; wi < state.words.length; wi++) {
+      var w = state.words[wi];
+      if (w.start >= state.chunkStartOffset && w.start < state.chunkStartOffset + chunk.length) {
+        chunkWordIndices.push(wi);
+      }
+    }
+    var msPerWord = 400 / state.rate; // 英语约 150 词/分钟 = 400ms/词
+
     utterance.onboundary = function(event) {
+      boundaryFired = true;
+      if (fallbackActive) clearFallback();
       var globalCharIndex = state.chunkStartOffset + event.charIndex;
       // 找到包含该字符位置的词
       var wordIndex = -1;
@@ -1097,7 +1142,17 @@
       }
     };
 
+    utterance.onstart = function() {
+      // 1.5秒后如果 onboundary 还没触发，启动定时器 fallback（移动端）
+      setTimeout(function() {
+        if (!boundaryFired && state.isPlaying && !state.isPaused) {
+          startFallback(chunkWordIndices, msPerWord);
+        }
+      }, 1500);
+    };
+
     utterance.onend = function() {
+      clearFallback();
       if (state.isPlaying && !state.isPaused) {
         playChunk(index + 1);
       }
@@ -1125,6 +1180,7 @@
   }
 
   function stopInternal() {
+    clearFallback();
     window.speechSynthesis.cancel();
     state.isPlaying = false;
     state.isPaused = false;
@@ -1324,6 +1380,10 @@
     window.speechSynthesis.onvoiceschanged = loadVoices;
   }
   loadVoices();
+  // 移动端语音可能异步加载，多次重试
+  setTimeout(loadVoices, 1000);
+  setTimeout(loadVoices, 2500);
+  setTimeout(loadVoices, 5000);
 
   // 初始化
   parseText('');
