@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a2e;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0c0c14;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="mic" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffc24b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ff9a3c;stop-opacity:1" />
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="6" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <!-- 背景 -->
+  <rect width="512" height="512" rx="96" fill="url(#bg)"/>
+  <!-- 声波装饰环 -->
+  <circle cx="256" cy="256" r="170" fill="none" stroke="#5b9cf6" stroke-width="2" opacity="0.15"/>
+  <circle cx="256" cy="256" r="140" fill="none" stroke="#5b9cf6" stroke-width="1.5" opacity="0.1"/>
+  <!-- 麦克风主体 -->
+  <g filter="url(#glow)">
+    <!-- 麦克风网头 -->
+    <rect x="216" y="120" width="80" height="120" rx="40" fill="url(#mic)"/>
+    <!-- 网头纹理 -->
+    <line x1="232" y1="150" x2="280" y2="150" stroke="#1a1200" stroke-width="3" stroke-linecap="round" opacity="0.3"/>
+    <line x1="232" y1="170" x2="280" y2="170" stroke="#1a1200" stroke-width="3" stroke-linecap="round" opacity="0.3"/>
+    <line x1="232" y1="190" x2="280" y2="190" stroke="#1a1200" stroke-width="3" stroke-linecap="round" opacity="0.3"/>
+    <line x1="232" y1="210" x2="280" y2="210" stroke="#1a1200" stroke-width="3" stroke-linecap="round" opacity="0.3"/>
+  </g>
+  <!-- 麦克风支架 -->
+  <path d="M200 260 L200 280 Q200 340 256 340 Q312 340 312 280 L312 260" fill="none" stroke="#ffc24b" stroke-width="10" stroke-linecap="round"/>
+  <!-- 底座 -->
+  <rect x="196" y="348" width="120" height="14" rx="7" fill="#ffc24b" opacity="0.9"/>
+  <rect x="216" y="370" width="80" height="10" rx="5" fill="#ffc24b" opacity="0.6"/>
+  <!-- 两侧声波 -->
+  <g stroke="#5b9cf6" stroke-width="5" stroke-linecap="round" fill="none">
+    <path d="M148 220 Q130 256 148 292" opacity="0.7"/>
+    <path d="M124 200 Q96 256 124 312" opacity="0.4"/>
+    <path d="M364 220 Q382 256 364 292" opacity="0.7"/>
+    <path d="M388 200 Q416 256 388 312" opacity="0.4"/>
+  </g>
+</svg>

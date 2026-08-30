@@ -1,0 +1,42 @@
+{
+  "name": "Speech Practice - 英语口语跟读练习",
+  "short_name": "Speech Practice",
+  "description": "卡拉OK式英语口语跟读练习器，逐词高亮朗读，支持男女声切换和语速调节",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0c0c14",
+  "theme_color": "#0c0c14",
+  "lang": "zh-CN",
+  "dir": "ltr",
+  "categories": ["education", "utilities", "productivity"],
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "加载示例",
+      "short_name": "示例",
+      "description": "快速加载示例演讲稿开始练习",
+      "url": "./index.html?action=sample"
+    }
+  ]
+}
